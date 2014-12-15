@@ -114,8 +114,6 @@ app.factory('List', ['Item', function (Item) {
       victim.correct(sum, except);
     };
 
-    console.log(list);
-
     list.forEach(function (item, index) {
       that.Items.push(new Item(item, that, index));
     });
@@ -133,7 +131,10 @@ app.factory('ItemSource', ['$resource', function ($resource) {
 
 app.controller('SlidersController', ['$scope', 'ItemSource', 'List', function ($scope, ItemSource, List) {
 
+  $scope.buttons = ['Один элемент', 'Два элемента', 'Три элемента', 'Четыре элемента', 'Пять элементов'];
+
   $scope.get = function (count) {
+    $scope.sliders = null;
     ItemSource.get({
       count: count
     }, function (request) {

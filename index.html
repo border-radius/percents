@@ -9,6 +9,9 @@
 </head>
 <body>
   <div class="sliders" ng-controller="SlidersController">
+    <p>
+      <button ng-repeat="button in buttons" ng-click="get($index + 1)">{{button}}</button>
+    </p>
     <p ng-repeat="slider in sliders.Items">
       {{slider.Name}}:<br/>
       <input type="range" min="0" max="100" step="0.01" ng-model="slider.Percent">
