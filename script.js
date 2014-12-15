@@ -44,6 +44,7 @@ app.factory('Item', function () {
     var Percent = item.Percent || 0;
     
     this.Name = item.Name || '';
+    this.Index = index;
 
     this.__defineGetter__('Percent', function () {
       return Percent;
@@ -51,7 +52,17 @@ app.factory('Item', function () {
 
     this.__defineSetter__('Percent', function (value) {
       Percent = parseFloat(value);
+      list.balance([index]);
     });
+
+    this.correct = function (sum, except) {
+      Percent = parseFloat((Percent - (sum - 100)).toFixed(2));
+      if (Percent < 0) {
+        Percent = 0;
+        except.push(index);
+        list.balance(except);
+      }
+    };
   }
 
   return Item;
@@ -61,9 +72,25 @@ app.factory('Item', function () {
 app.factory('List', ['Item', function (Item) {
 
   function List (list) {
+    var that = this;
+
     this.Items = [];
 
-    var that = this;
+    this.balance = function (except) {
+      var sum = this.Items.reduce(function (sum, item) {
+        return sum + item.Percent;
+      }, 0);
+
+      var victim = this.Items.reduce(function (victim, item, index) {
+        if (except.indexOf(index) > -1) return victim;
+        if (!victim) return item;
+        if (sum > 100 && item.Percent > victim.Percent) return item;
+        if (sum < 100 && item.Percent < victim.Percent) return item;
+        return victim;
+      }, null);
+
+      victim.correct(sum, except);
+    };
 
     list.forEach(function (item, index) {
       that.Items.push(new Item(item, that, index));
@@ -78,7 +105,13 @@ app.controller('SlidersController', ['$scope', 'List', function ($scope, List) {
 
   $scope.sliders = new List([{
     Name: 'Item 1',
-    Percent: 100
+    Percent: 40
+  }, {
+    Name: 'Item 2',
+    Percent: 30
+  }, {
+    Name: 'Item 3',
+    Percent: 30
   }]);
 
 }]);
