@@ -62,7 +62,6 @@ app.factory('Item', function () {
     var Percent = item.Percent || 0;
     
     this.Name = item.Name || '';
-    this.Index = index;
 
     this.__defineGetter__('Percent', function () {
       return Percent;
@@ -73,8 +72,10 @@ app.factory('Item', function () {
       list.balance([index]);
     });
 
+    /* Method for correcting total percentage */
     this.correct = function (sum, except) {
       Percent = parseFloat((Percent - (sum - 100)).toFixed(2));
+
       if (Percent < 0) {
         Percent = 0;
         except.push(index);
@@ -95,10 +96,13 @@ app.factory('List', ['Item', function (Item) {
     this.Items = [];
 
     this.balance = function (except) {
+      
+      /* Calculating sum of percents */
       var sum = this.Items.reduce(function (sum, item) {
         return sum + item.Percent;
       }, 0);
 
+      /* Searching for item which should compensate disbalance */
       var victim = this.Items.reduce(function (victim, item, index) {
         if (except.indexOf(index) > -1) return victim;
         if (!victim) return item;
