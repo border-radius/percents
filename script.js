@@ -68,6 +68,8 @@ app.factory('Item', function () {
     });
 
     this.__defineSetter__('Percent', function (value) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
       Percent = parseFloat(value);
       list.balance([index]);
     });
@@ -93,9 +95,9 @@ app.factory('List', ['Item', function (Item) {
   function List (list) {
     var that = this;
 
-    this.Items = [];
-
     this.balance = function (except) {
+
+      if (that.Items.length < 2 || that.Items.length < except.length) return;
 
       /* Calculating sum of percents */
       var sum = this.Items.reduce(function (sum, item) {
@@ -114,8 +116,8 @@ app.factory('List', ['Item', function (Item) {
       victim.correct(sum, except);
     };
 
-    list.forEach(function (item, index) {
-      that.Items.push(new Item(item, that, index));
+    this.Items = list.map(function (item, index) {
+      return new Item(item, that, index);
     });
 
     that.balance([]);

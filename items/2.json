@@ -1,0 +1,9 @@
+{
+  "Items": [{
+    "Name": "Item 1",
+    "Percent": 15
+  }, {
+    "Name": "Item 2",
+    "Percent": 0
+  }]
+}
