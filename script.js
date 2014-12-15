@@ -96,7 +96,7 @@ app.factory('List', ['Item', function (Item) {
     this.Items = [];
 
     this.balance = function (except) {
-      
+
       /* Calculating sum of percents */
       var sum = this.Items.reduce(function (sum, item) {
         return sum + item.Percent;
@@ -117,6 +117,8 @@ app.factory('List', ['Item', function (Item) {
     list.forEach(function (item, index) {
       that.Items.push(new Item(item, that, index));
     });
+
+    that.balance([]);
   }
 
   return List;
@@ -127,13 +129,13 @@ app.controller('SlidersController', ['$scope', 'List', function ($scope, List) {
 
   $scope.sliders = new List([{
     Name: 'Item 1',
-    Percent: 40
+    Percent: 0
   }, {
     Name: 'Item 2',
-    Percent: 30
+    Percent: 0
   }, {
     Name: 'Item 3',
-    Percent: 30
+    Percent: 0
   }]);
 
 }]);
