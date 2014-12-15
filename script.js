@@ -1,14 +1,42 @@
 var app = angular.module('percents', []);
 
-app.directive('preventLetters', function () {
-  return function (scope, elem, attrs) {
-    elem.on('keypress', function (event) {
-      if ([0, 8, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].indexOf(event.which) == -1) {
-        event.preventDefault();
-      }
-    });
+app.directive('numberModel', ['$timeout', function ($timeout) {
+  return {
+    scope: {
+      numberModel: '=numberModel'
+    },
+    link: function (scope, elem, attrs) {
+      var stored;
+      
+      scope.$watch('numberModel', function (value) {
+        elem.val(value);
+      });
+
+      elem.on('keypress', function (event) {
+        if ([0, 8, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].indexOf(event.which) === -1) {
+          event.preventDefault();
+        } else if ([44, 46].indexOf(event.which) === -1) {
+          if (stored) {
+            elem.val(+stored + String.fromCharCode(event.which)/10);
+            stored = null;
+            event.preventDefault();
+          }
+
+          $timeout(function () {
+            scope.numberModel = parseFloat(elem.val());
+            scope.$apply();
+          });
+        } else {
+          if (!stored && elem.val() % 1 === 0) {
+            stored = elem.val();
+          } else {
+            event.preventDefault();
+          }
+        }
+      });
+    }
   };
-});
+}]);
 
 app.factory('Item', function () {
 
