@@ -6,6 +6,19 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-resource.js"></script>
   <script src="script.js"></script>
+  <style>
+  input {
+    vertical-align: middle;
+  }
+
+  input[type=number] {
+    width: 60px;
+  }
+
+  input[type=range] {
+    width: 500px;
+  }
+  </style>
 </head>
 <body>
   <div class="sliders" ng-controller="SlidersController">
@@ -17,6 +30,8 @@
       <input type="range" min="0" max="100" step="0.01" ng-model="slider.Percent">
       <input type="number" number-model="slider.Percent">
     </p>
+    <p>Результат:</p>
+    <p ng-repeat="slider in sliders.Items">{{slider.Name}}: {{slider.Percent}}%</p>
   </div>
 </body>
 </html>

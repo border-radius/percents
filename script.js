@@ -18,12 +18,20 @@ app.directive('numberModel', ['$timeout', function ($timeout) {
 
     link: function (scope, elem, attrs) {
       var stored;
+
+      function update () {
+        $timeout(function () {
+            scope.numberModel = parseFloat(elem.val());
+            scope.$apply();
+        });
+      }
       
       scope.$watch('numberModel', function (value) {
         elem.val(value);
       });
 
       elem.on('keypress', function (event) {
+
         if (!isAllowedKey(event.which)) {
           event.preventDefault();
         } else if (!isSeparatorKey(event.which)) {
@@ -35,11 +43,8 @@ app.directive('numberModel', ['$timeout', function ($timeout) {
             event.preventDefault();
           }
 
-          /* Update value */
-          $timeout(function () {
-            scope.numberModel = parseFloat(elem.val());
-            scope.$apply();
-          });
+          update();
+          
         } else {
 
           /* Store valid value if separator pressed, prevent clearing */
@@ -51,6 +56,8 @@ app.directive('numberModel', ['$timeout', function ($timeout) {
 
         }
       });
+
+      elem.on('change', update);
     }
 
   };
