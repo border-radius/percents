@@ -1,4 +1,4 @@
-var app = angular.module('percents', []);
+var app = angular.module('percents', ['ngResource']);
 
 app.directive('numberModel', ['$timeout', function ($timeout) {
 
@@ -114,6 +114,8 @@ app.factory('List', ['Item', function (Item) {
       victim.correct(sum, except);
     };
 
+    console.log(list);
+
     list.forEach(function (item, index) {
       that.Items.push(new Item(item, that, index));
     });
@@ -125,18 +127,21 @@ app.factory('List', ['Item', function (Item) {
 
 }]);
 
-app.controller('SlidersController', ['$scope', 'List', function ($scope, List) {
+app.factory('ItemSource', ['$resource', function ($resource) {
+  return $resource('/items/:count.json');
+}]);
 
-  $scope.sliders = new List([{
-    Name: 'Item 1',
-    Percent: 0
-  }, {
-    Name: 'Item 2',
-    Percent: 0
-  }, {
-    Name: 'Item 3',
-    Percent: 0
-  }]);
+app.controller('SlidersController', ['$scope', 'ItemSource', 'List', function ($scope, ItemSource, List) {
+
+  $scope.get = function (count) {
+    ItemSource.get({
+      count: count
+    }, function (request) {
+      $scope.sliders = new List(request.Items);
+    });
+  };
+
+  $scope.get(3);
 
 }]);
 
