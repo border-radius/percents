@@ -1,10 +1,21 @@
 var app = angular.module('percents', []);
 
 app.directive('numberModel', ['$timeout', function ($timeout) {
+
+  function isAllowedKey (keycode) {
+    return [0, 8, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].indexOf(keycode) > -1;
+  }
+
+  function isSeparatorKey (keycode) {
+    return [44, 46].indexOf(keycode) > -1;
+  }
+
   return {
+
     scope: {
       numberModel: '=numberModel'
     },
+
     link: function (scope, elem, attrs) {
       var stored;
       
@@ -13,28 +24,35 @@ app.directive('numberModel', ['$timeout', function ($timeout) {
       });
 
       elem.on('keypress', function (event) {
-        if ([0, 8, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].indexOf(event.which) === -1) {
+        if (!isAllowedKey(event.which)) {
           event.preventDefault();
-        } else if ([44, 46].indexOf(event.which) === -1) {
+        } else if (!isSeparatorKey(event.which)) {
+
+          /* Make decimal */
           if (stored) {
-            elem.val(+stored + String.fromCharCode(event.which)/10);
+            elem.val(stored + String.fromCharCode(event.which) / 10);
             stored = null;
             event.preventDefault();
           }
 
+          /* Update value */
           $timeout(function () {
             scope.numberModel = parseFloat(elem.val());
             scope.$apply();
           });
         } else {
+
+          /* Store valid value if separator pressed, prevent clearing */
           if (!stored && elem.val() % 1 === 0) {
-            stored = elem.val();
+            stored = + elem.val();
           } else {
             event.preventDefault();
           }
+
         }
       });
     }
+
   };
 }]);
 
