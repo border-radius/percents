@@ -3,7 +3,7 @@ var app = angular.module('percents', []);
 app.directive('preventLetters', function () {
   return function (scope, elem, attrs) {
     elem.on('keypress', function (event) {
-      if (event.which < 48 || event.which > 57) {
+      if ([0, 8, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].indexOf(event.which) == -1) {
         event.preventDefault();
       }
     });
