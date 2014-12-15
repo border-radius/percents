@@ -135,7 +135,7 @@ app.factory('List', ['Item', function (Item) {
 }]);
 
 app.factory('ItemSource', ['$resource', function ($resource) {
-  return $resource('/items/:count.json');
+  return $resource('./items/:count.json');
 }]);
 
 app.controller('SlidersController', ['$scope', 'ItemSource', 'List', function ($scope, ItemSource, List) {
