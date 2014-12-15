@@ -1,5 +1,15 @@
 var app = angular.module('percents', []);
 
+app.directive('preventLetters', function () {
+  return function (scope, elem, attrs) {
+    elem.on('keypress', function (event) {
+      if (event.which < 48 || event.which > 57) {
+        event.preventDefault();
+      }
+    });
+  };
+});
+
 app.factory('Item', function () {
 
   function Item (item, list, index) {
