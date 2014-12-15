@@ -7,12 +7,12 @@
   <script src="script.js"></script>
 </head>
 <body>
-  <form novalidate class="sliders" ng-controller="SlidersController">
+  <div class="sliders" ng-controller="SlidersController">
     <p ng-repeat="slider in sliders.Items">
       {{slider.Name}}:<br/>
       <input type="range" min="0" max="100" step="0.01" ng-model="slider.Percent">
       <input type="number" number-model="slider.Percent">
     </p>
-  </form>
+  </div>
 </body>
 </html>
